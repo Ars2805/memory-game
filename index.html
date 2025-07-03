@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Memory Game</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Memory Game</h1>
+    <div class="stats">
+      <span>Ходы: <span id="moves">0</span></span>
+      <span>Время: <span id="timer">0</span> сек</span>
+      <span>Рекорд: <span id="best">—</span></span>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="controls">
+      <button id="restart">Начать заново</button>
+    </div>
+    <div class="message" id="message">
+      <h2>🎉 Победа!</h2>
+      <p>Вы прошли игру за <span id="finalTime"></span> сек и <span id="finalMoves"></span> ходов.</p>
+      <button onclick="startGame()">Играть снова</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

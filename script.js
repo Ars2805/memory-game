@@ -6,18 +6,25 @@ const message = document.getElementById('message');
 const finalTime = document.getElementById('finalTime');
 const finalMoves = document.getElementById('finalMoves');
 const restartBtn = document.getElementById('restart');
+const difficultySelect = document.getElementById('difficulty-select');
 
-let icons = ['🍎','🍌','🍒','🍇','🍍','🍓','🥝','🍉'];
-let cards = [];
+let allIcons = [
+    '🍎','🍌','🍒','🍇','🍍','🍓','🥝','🍉',
+    '🍋','🥥','🍑','🍐','🍊','🥭','🍈','🍏',
+    '🍅','🥕','🌽','🥑','🍄','🌶','🥒','🥬',
+    '🍆','🥔','🥜','🍞','🧀','🍗','🍖','🍔'];
+
+let icons = [];
 let flipped = [];
 let matched = 0;
 let moves = 0;
 let timer;
 let seconds = 0;
 let lockBoard = false;
+let gridSize = 4; // по умолчанию 4x4
 
 function shuffle(array) {
-  return array.concat(array).sort(() => 0.5 - Math.random());
+  return array.sort(() => 0.5 - Math.random());
 }
 
 function startTimer() {
@@ -69,7 +76,7 @@ function checkMatch() {
   const [first, second] = flipped;
 
   if (first.icon === second.icon) {
-    matched += 1;
+    matched++;
     flipped = [];
     if (matched === icons.length) endGame();
   } else {
@@ -89,16 +96,18 @@ function endGame() {
   finalTime.textContent = seconds;
   finalMoves.textContent = moves;
 
-  const best = JSON.parse(localStorage.getItem('bestScore'));
+  const bestKey = `bestScore_${gridSize}`;
+  const best = JSON.parse(localStorage.getItem(bestKey));
   if (!best || seconds < best.time || (seconds === best.time && moves < best.moves)) {
-    localStorage.setItem('bestScore', JSON.stringify({ time: seconds, moves }));
+    localStorage.setItem(bestKey, JSON.stringify({ time: seconds, moves }));
   }
 
   updateBest();
 }
 
 function updateBest() {
-  const best = JSON.parse(localStorage.getItem('bestScore'));
+  const bestKey = `bestScore_${gridSize}`;
+  const best = JSON.parse(localStorage.getItem(bestKey));
   bestElement.textContent = best ? `${best.time} сек / ${best.moves} ходов` : '—';
 }
 
@@ -107,15 +116,31 @@ function startGame() {
   grid.innerHTML = '';
   resetStats();
   stopTimer();
-  updateBest();
 
-  const shuffled = shuffle(icons);
-  shuffled.forEach(icon => {
+  gridSize = parseInt(difficultySelect.value);
+
+  grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+  const totalCards = gridSize * gridSize;
+  if (totalCards % 2 !== 0) {
+    alert("Выбранный размер должен быть чётным числом");
+    return;
+  }
+  const pairsCount = totalCards / 2;
+
+  icons = shuffle(allIcons).slice(0, pairsCount);
+
+  const cardIcons = shuffle([...icons, ...icons]);
+
+  cardIcons.forEach(icon => {
     const card = createCard(icon);
     grid.appendChild(card);
   });
+
+  updateBest();
 }
 
+difficultySelect.addEventListener('change', startGame);
 restartBtn.addEventListener('click', startGame);
 
 startGame();

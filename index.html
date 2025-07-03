@@ -9,6 +9,15 @@
 <body>
   <div class="game-container">
     <h1>Memory Game</h1>
+    <div class="difficulty">
+      <label for="difficulty-select">Выберите сложность:</label>
+      <select id="difficulty-select">
+        <option value="2">2 × 2</option>
+        <option value="4" selected>4 × 4</option>
+        <option value="6">6 × 6</option>
+        <option value="8">8 × 8</option>
+      </select>
+    </div>
     <div class="stats">
       <span>Ходы: <span id="moves">0</span></span>
       <span>Время: <span id="timer">0</span> сек</span>

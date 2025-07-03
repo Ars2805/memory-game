@@ -51,7 +51,7 @@ function createCard(icon) {
   card.classList.add('card');
   card.innerHTML = `
     <div class="front"></div>
-    <div class="back" style="background: white; display: flex; align-items: center; justify-content: center; font-size: 2rem;">${icon}</div>
+    <div class="back">${icon}</div>
   `;
   card.addEventListener('click', () => flipCard(card, icon));
   return card;
@@ -144,3 +144,20 @@ difficultySelect.addEventListener('change', startGame);
 restartBtn.addEventListener('click', startGame);
 
 startGame();
+
+const toggleThemeBtn = document.getElementById('toggle-theme');
+
+toggleThemeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  toggleThemeBtn.textContent = isDark ? '☀️ Светлая тема' : '🌙 Темная тема';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});
+
+(function loadTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+    toggleThemeBtn.textContent = '☀️ Светлая тема';
+  }
+})();
